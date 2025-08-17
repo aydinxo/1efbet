@@ -1,0 +1,32 @@
+@font-face {
+    font-family: 'vazir';
+    src: url('../fonts/Vazirmatn/Vazirmatn-VariableFont_wght.ttf');
+}
+
+*,*::before,*::after{
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+    /* border: 1px solid black; */
+}
+
+html{
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+}
+body{
+    font-family: 'vazir', sans-serif;
+    font-size: 1.6rem;
+    overflow-x: hidden;
+    background-color:#0c1c2b;
+    color: #fff;
+    position: relative;
+    height: 100vh;
+}
+
+.btn{
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+}
+
