@@ -6,18 +6,17 @@ window.addEventListener('load', () => {
     const choosnameBtn = document.querySelector('.choosname__btn');
     const menuUsername = document.querySelector('.menu__username');
 
-
     // overley background
     const overlay = document.querySelector('.overlay');
     overlay.addEventListener('click' , (e)=> e.stopPropagation());
 
-    choosnameBtn.addEventListener('click', () => {
-        if (username.value.length >= 3 && username.value.length <= 32) {
-            menuUsername.textContent = username.value;
-            choosename.classList.add('hidden');
-            overlay.classList.add('hidden');
-        }
-    });
+    // choosnameBtn.addEventListener('click', () => {
+    //     if (username.value.length >= 3 && username.value.length <= 32) {
+    //         menuUsername.textContent = username.value;
+    //         choosename.classList.add('hidden');
+    //         overlay.classList.add('hidden');
+    //     }
+    // });
 
 
     // menu open and close
@@ -26,18 +25,23 @@ window.addEventListener('load', () => {
 
     menuBar.addEventListener('click' , ()=>{
         menu.classList.remove('hidden');
-        document.querySelector('.overlay').classList.toggle('hidden');
+        overlay.classList.toggle('hidden');
     })
 
     const menuClose = document.querySelector('.menu_close');
     menuClose.addEventListener('click' , ()=>{
         menu.classList.add('hidden');
-        document.querySelector('.overlay').classList.add('hidden');
+        overlay.classList.add('hidden');
     })
 
+    let walletAmmountElement = document.getElementById('wallet__inventory');
+    let walletAmmount = 200.00;
+    walletAmmountElement.textContent = `${walletAmmount} $`;
+
     
-
-
+    let toman = document.getElementById('IRT');
+    let tomanNum = 93000;
+    toman.textContent = `${(tomanNum * walletAmmount).toLocaleString('fa-IR') } IRT`;
 
     // betAmount open calculator
     const betAmount = document.querySelector('#betAmount');
@@ -46,7 +50,7 @@ window.addEventListener('load', () => {
     betAmount.addEventListener('click' , ()=>{
         const calculator = document.querySelector('.calculator');
         calculator.classList.toggle('hidden');
-        document.querySelector('.overlay').classList.remove('hidden');
+        overlay.classList.remove('hidden');
     });
     ////////////////////////////////////////////////////////
 
@@ -68,7 +72,7 @@ window.addEventListener('load', () => {
             }
             else if(calculatorBtn[i].textContent === 'Ok'){
                 calculator.classList.add('hidden');
-                document.querySelector('.overlay').classList.add('hidden');
+                overlay.classList.add('hidden');
             }
             else{
                 sum += calculatorBtn[i].textContent;
@@ -105,7 +109,6 @@ window.addEventListener('load', () => {
         if(Number(betAmount.value) <= 1){
             footerHalf.disabled = true;
             footerHalf.classList.add('opacity-5');
-            betAmount.value = sum = '1';
         }
         else{
             footerHalf.disabled = false;
@@ -195,7 +198,7 @@ window.addEventListener('load', () => {
     const winnerOdds = document.getElementById('winner-odds');
     const winnerResult = document.getElementById('winner-result');
 
-    let inventoryNum = 1000;
+    let inventoryNum = 1000.00;
 
     const randNum = ()=> Math.floor(Math.random() * 25);
 
@@ -210,11 +213,46 @@ window.addEventListener('load', () => {
         pickedUp++;
         if(pickedUp === 3){
             winnerModal.classList.remove('hidden');
-            document.querySelector('.overlay').classList.remove('hidden');
+            overlay.classList.remove('hidden');
             winnerText.classList.add('scale-span');
 
             winnerOdds.textContent = `${Number(jewelNum - decimalNumber).toFixed(2)}x`;
-            winnerResult.textContent = `$ ${pickup}`;
+            // winnerResult.textContent = `$ ${pickup}`;
+
+
+            let money = Number(pickup);
+            let duration = 2500;
+            let startTime = null;
+
+            function easeOutQuad(t) {
+                return t * (2 - t);
+            }
+
+            function animateCount(timestamp) {
+                if (!startTime) startTime = timestamp;
+
+                let progress = (timestamp - startTime) / duration;
+                if (progress > 1) progress = 1;
+
+                let current = money * easeOutQuad(progress);
+
+                winnerResult.textContent = `$ ${current.toFixed(2)}`;
+
+                if (progress < 1) {
+                    requestAnimationFrame(animateCount);
+                }
+            }
+
+            requestAnimationFrame(animateCount);
+
+            
+
+
+            console.log(pickup);
+            walletAmmountElement.textContent =  `${(walletAmmount + Number(pickup)).toFixed(2)} $`
+            toman.textContent = `${(tomanNum * (walletAmmount + Number(pickup))).toLocaleString('fa-IR') } IRT`;
+
+            inventory.textContent = (inventoryNum + Number(pickup)) + '$';
 
 
             setTimeout(()=>{
@@ -224,8 +262,15 @@ window.addEventListener('load', () => {
         else{
             footerCondition.textContent = `برداشت ${betAmount.value}$`;
             allCondition.textContent = betAmount.value + '$';
-            inventory.textContent = inventoryNum - Number(betAmount.value) + '$';
+            inventory.textContent = (inventoryNum -= Number(betAmount.value)) + '$';
             idHand.textContent = Number(idHand.textContent) + 1;
+
+            walletAmmountElement.textContent =  `${(walletAmmount -= betAmount.value).toFixed(2)} $`;
+            toman.textContent =  `${(walletAmmount * tomanNum).toLocaleString('fa-IR')} IRT`;
+            console.log(Number(betAmount.value) * tomanNum);
+            console.log(tomanNum);
+            console.log(walletAmmount);
+            console.log(walletAmmount * tomanNum);
         
             footerCrossX2.classList.add('opacity-5');
             footerHalf.classList.add('opacity-5');
@@ -258,10 +303,10 @@ window.addEventListener('load', () => {
 
     let gemClicked = [];
 
+    // reset some variable and change classes
     function resetMinse(){
 
-        console.log('overlay');
-        document.querySelector('.overlay').classList.add('hidden');
+        overlay.classList.add('hidden');
 
         for(let i = 0 ; i < minesItem.length; i++){
             minesItem[i].firstElementChild.src = './images/gem.png';  
@@ -298,11 +343,13 @@ window.addEventListener('load', () => {
         menuMessage.classList.remove('menu__message--orange')
         menuMessage.classList.remove('menu__message--color')
 
+        allCondition.textContent = 0 + '$';
+
         minesLopp(true);
 
     }
 
-
+    // mines item loop for clicked
     for(let i = 0 ; i < minesItem.length ; i++){
         minesItem[i].addEventListener('click' , ()=>{
             if(minesItem[i].firstElementChild.src.includes('images/mine.png')){
@@ -338,4 +385,19 @@ window.addEventListener('load', () => {
             };
         });
     };
+
+    setInterval(()=>{
+        let appTime = document.querySelector('.menu__nav-time');
+    
+        const now = new Date();
+        const options = {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+            timeZone: 'Asia/Tehran'
+        };
+        const iranTime = now.toLocaleTimeString('en-GB', options);
+        appTime.textContent = iranTime;
+    }, 10)
 });
+

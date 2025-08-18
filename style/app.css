@@ -362,7 +362,7 @@ header nav{
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 0 1rem;
+    padding: 0 .4rem;
 }
 .header__inventory svg{
     width: 1.4rem;
@@ -380,6 +380,8 @@ header nav{
     color: #ffffffde;
     margin-top: .4rem;
     line-height: 1;
+    /* width: max-content;
+    text-align: left; */
 }
 .header__price span:last-child{
     color: rgb(139, 139, 141);
