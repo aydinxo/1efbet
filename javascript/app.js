@@ -198,7 +198,7 @@ window.addEventListener('load', () => {
     const winnerOdds = document.getElementById('winner-odds');
     const winnerResult = document.getElementById('winner-result');
 
-    let inventoryNum = 1000.00;
+    let inventoryNum = 200.00;
 
     const randNum = ()=> Math.floor(Math.random() * 25);
 
@@ -215,6 +215,10 @@ window.addEventListener('load', () => {
             winnerModal.classList.remove('hidden');
             overlay.classList.remove('hidden');
             winnerText.classList.add('scale-span');
+
+            footerCondition.classList.add('footer__condition--active')
+            footerCondition.textContent = 'برداشت';
+
 
             winnerOdds.textContent = `${Number(jewelNum - decimalNumber).toFixed(2)}x`;
             // winnerResult.textContent = `$ ${pickup}`;
@@ -295,6 +299,8 @@ window.addEventListener('load', () => {
         
             for(let i = 0 ; i < itemAndis.length; i++){
                 minesItem[itemAndis[i]].firstElementChild.src = './images/mine.png';
+                minesItem[itemAndis[i]].classList.add('mines__item--bomb');
+
             }
 
         }
@@ -310,6 +316,7 @@ window.addEventListener('load', () => {
 
         for(let i = 0 ; i < minesItem.length; i++){
             minesItem[i].firstElementChild.src = './images/gem.png';  
+            minesItem[i].classList.remove('mines__item--bomb');
             minesItem[i].classList.remove('mines__item--active');
             minesItem[i].classList.remove('mines__item--active--bomb');     
         };
@@ -328,15 +335,17 @@ window.addEventListener('load', () => {
         footerCrossX2.classList.remove('opacity-5');
         footerCrossX2.disabled = false;
         footerHalf.disabled = false;
-
+        
+        
         winnerModal.classList.add('hidden');
-        // document.querySelector('.overlay').classList.add('hidden');
+        overlay.classList.add('hidden');
         winnerText.classList.remove('scale-span');
-
+        
         for(let i = 0 ; i < minesItem.length ; i++){
             minesItem[i].classList.remove('opacity-10')
         }
-
+        
+        footerCondition.classList.remove('footer__condition--active')
         footerCondition.textContent = 'شرط';
 
         menuMessage.textContent = `اولین جواهر برابره ${Number((jewelNum += decimalNumber)).toFixed(2)}x است`;
@@ -356,6 +365,9 @@ window.addEventListener('load', () => {
                 
                 minesItem[i].classList.add('mines__item--active');
                 minesItem[i].classList.add('mines__item--active--bomb');
+
+                footerCondition.classList.add('footer__condition--active')
+                footerCondition.textContent = 'برداشت';
 
                 pickedUp = 1;
 
