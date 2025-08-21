@@ -136,8 +136,12 @@ window.addEventListener('load', () => {
         return Number((Math.random() * (max - min) + min).toFixed(2));
     };
 
+    let increase1 = 6;
+    let increase2 = 10;
+
     let jewelNum = Number(betAmount.value);
-    let decimalNumber = decimalNum((bombNum - 1) / 10, (bombNum + 1) / 10);
+    let decimalNumber = decimalNum((bombNum + increase1) / 10, (bombNum + increase2) / 10);
+
 
 
     function updateSlider() {
@@ -151,10 +155,27 @@ window.addEventListener('load', () => {
         if (currentValue > prevValue) {
             bombNum++;
             gemNum--;
-            menuMessage.textContent = `اولین جواهر برابره ${Number((jewelNum += decimalNumber).toFixed(2))}x است`;            
+
+            increase1 += 10;
+            increase2 += 10;
+      
+            decimalNumber = decimalNum((bombNum + increase1) / 10, (bombNum + increase2) / 10);
+
+            console.log(increase1 , increase2 , decimalNumber);
+
+            menuMessage.textContent = `اولین جواهر برابره ${Number((jewelNum += decimalNumber).toFixed(2))}x است`;  
+
         } else if (currentValue < prevValue) {
             bombNum--;
             gemNum++;
+
+            increase1 -= 10;
+            increase2 -= 10;
+      
+            decimalNumber = decimalNum((bombNum + increase1) / 10, (bombNum + increase2) / 10);
+
+            console.log(increase1 , increase2 , decimalNumber);
+
             menuMessage.textContent = `اولین جواهر برابره ${Number((jewelNum -= decimalNumber).toFixed(2))}x است`;
         }
 
@@ -206,6 +227,36 @@ window.addEventListener('load', () => {
 
     let pickedUp = 1;
 
+    let bomb3x = [
+        1.10,
+        1.27,
+        1.47,
+        1.68,
+        1.97,
+        2.38,
+        2.76,
+        3.31,
+        4.37,
+        4.2,
+        4.95,
+        6.19,
+        7.98,
+        10.84,
+        13.68,
+        18.78,
+        26.85,
+        40.24,
+        64.12,
+        94.21,
+        157.21,
+        240 , 
+        400 ,
+    ];
+    console.log(bomb3x.length);
+
+    let bomb3xNum = 0;
+
+
     footerCondition.addEventListener('click' , ()=>{
 
         minesLopp(false);
@@ -219,9 +270,12 @@ window.addEventListener('load', () => {
             footerCondition.classList.add('footer__condition--active')
             footerCondition.textContent = 'برداشت';
 
-
-            winnerOdds.textContent = `${Number(jewelNum - decimalNumber).toFixed(2)}x`;
-            // winnerResult.textContent = `$ ${pickup}`;
+            if(bombNum === 3){
+                winnerOdds.textContent = `${Number(bomb3x[bomb3xNum - 1]).toFixed(2)}x`;
+            }
+            else{
+                winnerOdds.textContent = `${Number(jewelNum - decimalNumber).toFixed(2)}x`;
+            }
 
 
             let money = Number(pickup);
@@ -246,11 +300,7 @@ window.addEventListener('load', () => {
                     requestAnimationFrame(animateCount);
                 }
             }
-
             requestAnimationFrame(animateCount);
-
-            
-
 
             console.log(pickup);
             walletAmmountElement.textContent =  `${(walletAmmount + Number(pickup)).toFixed(2)} $`
@@ -272,9 +322,6 @@ window.addEventListener('load', () => {
             walletAmmountElement.textContent =  `${(walletAmmount -= betAmount.value).toFixed(2)} $`;
             toman.textContent =  `${(walletAmmount * tomanNum).toLocaleString('fa-IR')} IRT`;
             console.log(Number(betAmount.value) * tomanNum);
-            console.log(tomanNum);
-            console.log(walletAmmount);
-            console.log(walletAmmount * tomanNum);
         
             footerCrossX2.classList.add('opacity-5');
             footerHalf.classList.add('opacity-5');
@@ -325,10 +372,12 @@ window.addEventListener('load', () => {
             gemClicked[i].classList.remove('mines__item--active--gem');
         };
 
+
         gemClicked = [];
         itemAndis = [];
         pickedUp = 1;
         jewelNum = 1.11;
+        bomb3xNum = 0;
         
         if(betAmount.value > 1)
             footerHalf.classList.remove('opacity-5');
@@ -386,13 +435,30 @@ window.addEventListener('load', () => {
                 },4000)
             }
             else{
-                minesItem[i].classList.add('mines__item--active');
-                gemClicked.push(minesItem[i])
 
-                pickup = (Number(betAmount.value) * jewelNum).toFixed(2);
-                footerCondition.textContent = `برداشت ${pickup}$`;
-                decimalNumber = decimalNum((bombNum - 1) / 10, (bombNum + 1) / 10);
-                menuMessage.textContent = `ادامه دهید تا ${Number((jewelNum += decimalNumber).toFixed(2))}x برنده شوید`;
+                minesItem[i].classList.add('mines__item--active');
+                gemClicked.push(minesItem[i]);
+
+                if(bombNum === 3){
+                    console.log(bomb3x[bomb3xNum]);
+                    pickup = (Number(betAmount.value) * bomb3x[bomb3xNum]).toFixed(2);
+                    footerCondition.textContent = `برداشت ${pickup}$`;
+                    
+                    bomb3xNum++;
+                    menuMessage.textContent = `ادامه دهید تا ${Number((bomb3x[bomb3xNum]).toFixed(2))}x برنده شوید`;
+                }
+                else{
+                    pickup = (Number(betAmount.value) * jewelNum).toFixed(2);
+                    footerCondition.textContent = `برداشت ${pickup}$`;
+
+                    increase1 += 10;
+                    increase2 += 10;
+
+                    decimalNumber = decimalNum((bombNum + increase1) / 10, (bombNum + increase2) / 10);
+
+                    console.log(increase1 , increase2 , decimalNumber);
+                    menuMessage.textContent = `ادامه دهید تا ${Number((jewelNum += decimalNumber).toFixed(2))}x برنده شوید`;
+                }
 
             };
         });
